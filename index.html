@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>CRUD HOTDOGS</title>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+	<div id="crud_app">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="text-center pt-4">CRUD HotDogs</h1>
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-5">
+			<div class="col-lg-6">
+				<h2 class="ml-5">HotDogs</h2>
+			</div>
+			<div class="col-lg-6">
+				<button class="btn btn-primary float-right mr-5" @click="showAddHotDog=true">
+					<i class="fas fa-hotdog"></i> Add New HotDog
+				</button>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-lg-12">
+				<table class="table table-bordered table-striped">
+					<thead class="bg-primary">
+						<tr class="text-center">
+							<th>ID</th>
+							<th>HotDog Name</th>
+							<th>Bun</th>
+							<th>Sausage</th>
+							<th>Vegetables</th>
+							<th>Sauce</th>	
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-center" v-for="hotdog in hotdogs">
+							<td> {{ hotdog.id }} </td>
+							<td> {{ hotdog.name }} </td>
+							<td> {{ hotdog.bun }} </td>
+							<td> {{ hotdog.sausage }} </td>
+							<td> {{ hotdog.vegetables }} </td>
+							<td> {{ hotdog.sauce }} </td>
+							<td><a href="#" class="text-warning" @click="showEditHotDog=true; selectHotDog(hotdog)"><i class="fas fa-edit"></i></a></td>
+							<td><a href="#" class="text-danger" @click="showDeleteHotDog=true; selectHotDog(hotdog)"><i class="fas fa-trash"></i></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!--ADD HotDog-->
+
+		<div id="overlay" v-if="showAddHotDog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Add New HotDog</h5>
+						<button type="button" class="close">
+							<span aria-hidden="true" @click="showAddHotDog=false">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body p-2 d-flex justify-content-center">
+						<form action="#" method="POST">
+							<div class="form-group">
+								<input type="text" name="name" class="form-control form-control-lg" placeholder="HotDog Name" v-model="newHotDog.name">
+							</div>
+							<div class="form-group">
+								<input type="text" name="bun" class="form-control form-control-lg" placeholder="Bun" v-model="newHotDog.bun">
+							</div>
+							<div class="form-group">
+								<input type="text" name="sausage" class="form-control form-control-lg" placeholder="Sausage" v-model="newHotDog.sausage">
+							</div>
+							<div class="form-group">
+								<input type="text" name="vegetables" class="form-control form-control-lg" placeholder="Vegetables" v-model="newHotDog.vegetables">
+							</div>
+							<div class="form-group">
+								<input type="text" name="sauce" class="form-control form-control-lg" placeholder="Sauce" v-model="newHotDog.sauce">
+							</div>
+							<div class="form-group">
+								<button class="btn btn-primary btn-block btn-lg" @click="showAddHotDog=false; addHotDog();">Add New</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--EDIT HOTDOG-->
+				
+		<div id="overlay" v-if="showEditHotDog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Edit HotDog</h5>
+						<button type="button" class="close">
+							<span aria-hidden="true" @click="showEditHotDog=false">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body p-2 d-flex justify-content-center">
+						<form action="#" method="POST">
+							<div class="form-group">
+								<input type="text" name="name" class="form-control form-control-lg" v-model="currentHotDog.name">
+							</div>
+							<div class="form-group">
+								<input type="text" name="bun" class="form-control form-control-lg" v-model="currentHotDog.bun">
+							</div>
+							<div class="form-group">
+								<input type="text" name="sausage" class="form-control form-control-lg" v-model="currentHotDog.sausage">
+							</div>
+							<div class="form-group">
+								<input type="text" name="vegetables" class="form-control form-control-lg" v-model="currentHotDog.vegetables">
+							</div>
+							<div class="form-group">
+								<input type="text" name="sauce" class="form-control form-control-lg" v-model="currentHotDog.sauce">
+							</div>
+							<div class="form-group">
+								<button class="btn btn-primary btn-block btn-lg" @click="showEditHotDog=false; updateHotDog();">Update</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+<!--DELETE HOTDOG-->
+				
+		<div id="overlay" v-if="showDeleteHotDog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Delete HotDog</h5>
+						<button type="button" class="close">
+							<span aria-hidden="true" @click="showDeleteHotDog=false">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body p-2 d-flex justify-content-center">
+						<h5 class="text-danger">Are you shure?</h5>
+						<hr>
+						<button class="btb btn-danger btn-lg" @click="showDeleteHotDog=false; deleteHotDog();">YES</button>
+						<button class="btb btn-success btn-lg" @click="showDeleteHotDog=false">NO</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>    
+
+	
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="assets/js/main.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+</body>
+</html>
